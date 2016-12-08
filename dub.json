@@ -1,0 +1,15 @@
+{
+    "name": "saslwrapped",
+    "authors": [
+        "Andrew Benton"
+    ],
+    "description": "A D binding to libsasl2 that imitates saslwrapper",
+    "copyright": "Copyright © 2016, Andrew Benton",
+    "license": "BSL-1",
+    "libs-posix": [
+        "sasl2"
+    ],
+    "targetType": "library",
+    "targetName": "saslwrapped",
+    "targetPath": "build"
+}
