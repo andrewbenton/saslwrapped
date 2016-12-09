@@ -5,6 +5,7 @@ import core.stdc.stdlib;
 
 import std.conv;
 import std.format : format;
+import std.stdio;
 import std.string;
 
 import saslwrapped.sasl;
@@ -13,6 +14,39 @@ import saslwrapped.sasl;
     This client implementation is pretty much a direct rip-off of
     https://github.com/cloudera/python-sasl/blob/master/sasl/saslwrapper.h
 */
+
+extern(C) int cbName(void *context, int id, char **result, uint *len) nothrow
+{
+    Client cli = cast(Client)context;
+
+    if(id == SASL_CB_USER || (id == SASL_CB_AUTHNAME && cli.authName.empty))
+        *result = cast(char*)cli.userName.toStringz;
+    else
+        *result = cast(char*)cli.authName.toStringz;
+
+    return SASL_OK;
+}
+
+extern(C) int cbPassword(sasl_conn_t *conn, void *context, int id, sasl_secret_t **psecret) nothrow
+{
+    Client cli = cast(Client)context;
+    size_t length = cli.password.length;
+
+    if(id == SASL_CB_PASS)
+    {
+        import core.stdc.string;
+        cli.secret.len = length;
+        memcpy(cli.secret.data, cast(char*)cli.password.toStringz, length);
+    }
+    else
+    {
+        cli.secret.len = 0;
+    }
+
+    *psecret = cli.secret;
+
+    return SASL_OK;
+}
 
 class Client
 {
@@ -86,39 +120,6 @@ private:
 
         prompt.result = cast(char*)output.ptr;
         prompt.len = cast(uint)output.length;
-    }
-
-    static int cbName(void *context, int id, char **result, uint *len)
-    {
-        Client cli = cast(Client)context;
-
-        if(id == SASL_CB_USER || (id == SASL_CB_AUTHNAME && cli.authName.empty))
-            *result = cast(char*)cli.userName.toStringz;
-        else
-            *result = cast(char*)cli.authName.toStringz;
-
-        return SASL_OK;
-    }
-
-    static int cbPassword(sasl_conn_t *conn, void *context, int id, sasl_secret_t **psecret)
-    {
-        Client cli = cast(Client)context;
-        size_t length = cli.password.length;
-
-        if(id == SASL_CB_PASS)
-        {
-            import core.stdc.string;
-            cli.secret.len = length;
-            memcpy(cli.secret.data, cast(char*)cli.password.toStringz, length);
-        }
-        else
-        {
-            cli.secret.len = 0;
-        }
-
-        *psecret = cli.secret;
-
-        return SASL_OK;
     }
 
     //__gshared bool initialized = false;

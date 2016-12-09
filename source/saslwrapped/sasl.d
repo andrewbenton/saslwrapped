@@ -74,17 +74,17 @@ struct sasl_secret_t
 
 struct sasl_rand_t;
 
-alias sasl_malloc_t = void* function(size_t);
-alias sasl_calloc_t = void* function(size_t, size_t);
-alias sasl_realloc_t = void* function(void*, size_t);
-alias sasl_free_t = void function(void*);
+alias sasl_malloc_t = void* function(size_t) nothrow;
+alias sasl_calloc_t = void* function(size_t, size_t) nothrow;
+alias sasl_realloc_t = void* function(void*, size_t) nothrow;
+alias sasl_free_t = void function(void*) nothrow;
 
 void sasl_set_alloc(sasl_malloc_t, sasl_calloc_t, sasl_realloc_t, sasl_free_t);
 
-alias sasl_mutex_alloc_t = void* function();
-alias sasl_mutex_lock_t = int function(void *mutex);
-alias sasl_mutex_unlock_t = int function(void *mutex);
-alias sasl_mutex_free_t = void function(void *mutex);
+alias sasl_mutex_alloc_t = void* function() nothrow;
+alias sasl_mutex_lock_t = int function(void *mutex) nothrow;
+alias sasl_mutex_unlock_t = int function(void *mutex) nothrow;
+alias sasl_mutex_free_t = void function(void *mutex) nothrow;
 
 void sasl_set_mutex(sasl_mutex_alloc_t, sasl_mutex_lock_t, sasl_mutex_unlock_t, sasl_mutex_free_t);
 
@@ -115,7 +115,7 @@ struct sasl_security_properties_t
     char **property_values;
 }
 
-alias sasl_callback_func = int function();
+alias sasl_callback_func = int function() nothrow;
 
 struct sasl_callback
 {
@@ -128,7 +128,7 @@ alias sasl_callback_t = sasl_callback;
 
 enum SASL_CB_LIST_END = 0;
 
-alias sasl_getopt_t = int function(void *context, char *plugin_name, char *option, char **result, uint *len);
+alias sasl_getopt_t = int function(void *context, char *plugin_name, char *option, char **result, uint *len) nothrow;
 
 enum SASL_CB_GETOPT = 1;
 
@@ -141,11 +141,11 @@ enum SASL_LOG_DEBUG = 5;
 enum SASL_LOG_TRACE = 6;
 enum SASL_LOG_PASS = 7;
 
-alias sasl_log_t = int function(void *context, int level, char *message);
+alias sasl_log_t = int function(void *context, int level, char *message) nothrow;
 
 enum SASL_CB_LOG = 2;
 
-alias sasl_getpath_t = int function(void *context, char **path);
+alias sasl_getpath_t = int function(void *context, char **path) nothrow;
 
 enum SASL_CB_GETPATH = 3;
 
@@ -157,15 +157,15 @@ enum sasl_verify_type_t
     SASL_VRFY_OTHER = 3
 }
 
-alias sasl_verify_file_t = int function(void *context, char *file, sasl_verify_type_t type);
+alias sasl_verify_file_t = int function(void *context, char *file, sasl_verify_type_t type) nothrow;
 
 enum SASL_CB_VERIFYFILE = 4;
 
-alias sasl_getconfpath_t = int function(void *context, char **path);
+alias sasl_getconfpath_t = int function(void *context, char **path) nothrow;
 
 enum SASL_CB_GETCONFPATH = 5;
 
-alias sasl_getsimple_t = int function(void *context, int id, char **result, uint *len);
+alias sasl_getsimple_t = int function(void *context, int id, char **result, uint *len) nothrow;
 
 enum SASL_CB_USER = 0x4001;
 enum SASL_CB_AUTHNAME = 0x4002;
@@ -173,28 +173,28 @@ enum SASL_CB_LANGUAGE = 0x4003;
 
 enum SASL_CB_CNONCE = 0x4007;
 
-alias sasl_getsecret_t = int function(sasl_conn_t *conn, void *context, int id, sasl_secret_t **psecret);
+alias sasl_getsecret_t = int function(sasl_conn_t *conn, void *context, int id, sasl_secret_t **psecret) nothrow;
 
 enum SASL_CB_PASS = 0x4004;
 
-alias sasl_chalprompt_t = int function(void *context, int id, char *challenge, char *prompt, char *defresult, char **result, uint *len);
+alias sasl_chalprompt_t = int function(void *context, int id, char *challenge, char *prompt, char *defresult, char **result, uint *len) nothrow;
 
 enum SASL_CB_ECHOPROMPT = 0x4005;
 enum SASL_CB_NOECHOPROMPT = 0x4006;
 
-alias sasl_getrealm_t = int function(void *context, int id, char **availrealms, char **result);
+alias sasl_getrealm_t = int function(void *context, int id, char **availrealms, char **result) nothrow;
 
 enum SASL_CB_GETREALM = 0x4008;
 
-alias sasl_authorize_t = int function(sasl_conn_t *conn, void *context, char *requested_user, uint rlen, char *auth_identity, uint alen, char *def_realm, uint urlen, propctx *prop);
+alias sasl_authorize_t = int function(sasl_conn_t *conn, void *context, char *requested_user, uint rlen, char *auth_identity, uint alen, char *def_realm, uint urlen, propctx *prop) nothrow;
 
 enum SASL_CB_PROXY_POLICY = 0x8001;
 
-alias sasl_server_userdb_checkpass_t = int function(sasl_conn_t *conn, void *context, char *user, char *pass, uint passlen, propctx *prop);
+alias sasl_server_userdb_checkpass_t = int function(sasl_conn_t *conn, void *context, char *user, char *pass, uint passlen, propctx *prop) nothrow;
 
 enum SASL_CB_SERVER_USERDB_CHECKPASS = 0x8005;
 
-alias sasl_server_userdb_setpass_t = int function(sasl_conn_t *conn, void *context, char *user, char *pass, uint passlen, propctx *prop, uint flags);
+alias sasl_server_userdb_setpass_t = int function(sasl_conn_t *conn, void *context, char *user, char *pass, uint passlen, propctx *prop, uint flags) nothrow;
 
 enum SASL_CB_SERVER_USERDB_SETPASS = 0x8006;
 
@@ -209,7 +209,7 @@ enum SASL_CU_OVERRIDE = 0x08;
 enum SASL_CU_ASIS_MASK = 0xFFF0;
 enum SASL_CU_VERIFY_AGAINST_HASH = 0x10;
 
-alias sasl_cannon_user_t = int function(sasl_conn_t *conn, void *context, char *ins, uint inlen, uint flags, char *user_realm, char *outs, uint out_max, uint *out_len);
+alias sasl_cannon_user_t = int function(sasl_conn_t *conn, void *context, char *ins, uint inlen, uint flags, char *user_realm, char *outs, uint out_max, uint *out_len) nothrow;
 
 enum SASL_CB_CANON_USER = 0x8007;
 

@@ -1,0 +1,13 @@
+{
+    "name": "sample-client",
+    "authors": [
+        "Andrew Benton"
+    ],
+    "description": "Sample client using saslwrapped",
+    "copyright": "Copyright © 2016, Andrew Benton",
+    "license": "BSL-1",
+    "targetType": "executable",
+    "dependencies": {
+        "saslwrapped": { "path": "../../" }
+    }
+}
