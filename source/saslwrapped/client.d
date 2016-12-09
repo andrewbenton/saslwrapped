@@ -48,6 +48,8 @@ extern(C) int cbPassword(sasl_conn_t *conn, void *context, int id, sasl_secret_t
     return SASL_OK;
 }
 
+alias SaslClient = Client;
+
 class Client
 {
 private:
